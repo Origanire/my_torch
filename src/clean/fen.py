@@ -1,13 +1,8 @@
-"""Convert a FEN chess position into a vector of numbers for the network.
-
-Encoding (769 values):
-  - 12 planes of 8x8 (one per piece type, one-hot): 768 values
-  - 1 value for the side to move (1 = white, 0 = black)
-"""
+"""Transforme une position FEN en vecteur de 769 nombres pour le réseau."""
 
 import numpy as np
 
-# Order of the 12 planes: white pieces then black pieces
+# One-hot : un "plan" 8x8 par type de pièce, 1 si la pièce est sur la case, 0 sinon
 PIECES = "PNBRQKpnbrqk"
 PIECE_INDEX = {piece: i for i, piece in enumerate(PIECES)}
 
@@ -15,7 +10,7 @@ INPUT_SIZE = 12 * 64 + 1
 
 
 def fen_to_vector(fen):
-    """Return a numpy array of shape (769,) describing the position."""
+    """Renvoie le vecteur : 12 plans x 64 cases, puis le trait (1 = blancs, 0 = noirs)."""
     fields = fen.split()
     if len(fields) < 2:
         raise ValueError(f"invalid FEN: '{fen}'")
@@ -30,12 +25,12 @@ def fen_to_vector(fen):
         file = 0
         for char in row:
             if char.isdigit():
-                file += int(char)  # a digit = that many empty squares
+                # Un chiffre = autant de cases vides
+                file += int(char)
             elif char in PIECE_INDEX:
                 if file >= 8:
                     raise ValueError(f"invalid FEN row: '{row}'")
-                square = rank * 8 + file
-                vector[PIECE_INDEX[char] * 64 + square] = 1.0
+                vector[PIECE_INDEX[char] * 64 + rank * 8 + file] = 1.0
                 file += 1
             else:
                 raise ValueError(f"invalid FEN character: '{char}'")

@@ -1,0 +1,16 @@
+# Dataset (trop lourd, à garder en local pour la soutenance)
+dataset/
+
+# Sujet
+my_torch-project.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Système / éditeurs
+.DS_Store
+.vscode/
+.idea/

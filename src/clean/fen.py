@@ -9,14 +9,14 @@ PIECE_INDEX = {piece: i for i, piece in enumerate(PIECES)}
 INPUT_SIZE = 12 * 64 + 1
 
 
-def fen_to_vector(fen):
+def fen_to_vector(fen, dtype=np.float32):
     """Renvoie le vecteur : 12 plans x 64 cases, puis le trait (1 = blancs, 0 = noirs)."""
     fields = fen.split()
     if len(fields) < 2:
         raise ValueError(f"invalid FEN: '{fen}'")
     board, side = fields[0], fields[1]
 
-    vector = np.zeros(INPUT_SIZE, dtype=np.float32)
+    vector = np.zeros(INPUT_SIZE, dtype=dtype)
     rows = board.split("/")
     if len(rows) != 8:
         raise ValueError(f"invalid FEN board: '{board}'")

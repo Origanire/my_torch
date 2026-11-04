@@ -8,10 +8,12 @@ class Dense:
 
     def __init__(self, input_size, output_size, init="he", rng=None):
         rng = rng or np.random.default_rng()
-        # Écart-type des poids initiaux : He pour ReLU, Xavier pour tanh/sigmoid
+        # Écart-type des poids initiaux : garde la variance stable d'une couche à l'autre
         if init == "he":
             scale = np.sqrt(2.0 / input_size)
         elif init == "xavier":
+            scale = np.sqrt(2.0 / (input_size + output_size))
+        elif init == "lecun":
             scale = np.sqrt(1.0 / input_size)
         else:
             raise ValueError(f"unknown init: '{init}'")
@@ -37,3 +39,33 @@ class Dense:
     def params(self):
         """Paires (paramètre, gradient) que l'optimiseur mettra à jour."""
         return [(self.weights, self.grad_weights), (self.bias, self.grad_bias)]
+
+
+class Dropout:
+    """Éteint au hasard une proportion `rate` des neurones pendant l'entraînement.
+
+    Dropout inversé : on divise par (1 - rate) à l'entraînement pour que la sortie
+    garde le même ordre de grandeur qu'en prédiction, où rien n'est éteint.
+    """
+
+    def __init__(self, rate, rng=None):
+        if not 0.0 <= rate < 1.0:
+            raise ValueError(f"invalid dropout rate: {rate}")
+        self.rate = rate
+        self.rng = rng or np.random.default_rng()
+        self.training = True
+
+    def forward(self, inputs):
+        if not self.training or self.rate == 0.0:
+            self.mask = None
+            return inputs
+        keep = self.rng.random(inputs.shape, dtype=np.float32) >= self.rate
+        self.mask = keep.astype(inputs.dtype) / (1.0 - self.rate)
+        return inputs * self.mask
+
+    def backward(self, grad_output):
+        # Les neurones éteints ne reçoivent pas d'erreur
+        return grad_output if self.mask is None else grad_output * self.mask
+
+    def params(self):
+        return []

@@ -1,5 +1,9 @@
 # my_torch
 
+[![Tests](https://github.com/Origanire/my_torch/actions/workflows/tests.yml/badge.svg)](https://github.com/Origanire/my_torch/actions/workflows/tests.yml)
+
+> **English summary.** Neural network written from scratch with NumPy only (no PyTorch or TensorFlow) that reads a chess position (FEN) and predicts the game state: 91.76% accuracy and 90.25% macro F1 on 72,301 unseen positions. Includes Adam, dropout, L2, early stopping, data augmentation, benchmarks and gradient-checked unit tests. Documentation below is in French.
+
 Un réseau de neurones écrit **à la main** (sans PyTorch ni TensorFlow, avec seulement NumPy pour les calculs sur les tableaux), qui lit une position d'échecs au format FEN et prédit l'état de la partie :
 
 `Nothing` · `Check White` · `Check Black` · `Checkmate White` · `Checkmate Black`
@@ -8,6 +12,15 @@ Un réseau de neurones écrit **à la main** (sans PyTorch ni TensorFlow, avec s
 
 Projet Epitech (G-CNA-501) réalisé en binôme, avec Milo Bousquet comme lead.
 Pour une démonstration guidée sans entraînement : `./demo.sh` (écrit uniquement dans `demo_live/`).
+
+**Contrôle de fuite.** Le jeu de test est séparé avant l'augmentation, mais une
+même position peut apparaître dans plusieurs fichiers sources. 1 560 positions de test
+(2,2 %) se retrouvent dans l'entraînement, telles quelles ou par symétrie. Sans elles,
+le réseau garde **91,65 % de précision et 90,10 % de F1 macro** sur 70 741 positions :
+le score annoncé ne vient pas de la mémorisation.
+
+Tests : `make tests_run` (gradients vérifiés par différences finies, softmax, dropout,
+Adam, sauvegarde, encodage FEN, labels et augmentation).
 
 ## Installation
 

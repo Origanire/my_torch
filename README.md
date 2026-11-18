@@ -6,6 +6,9 @@ Un réseau de neurones écrit **à la main** (sans PyTorch ni TensorFlow, avec s
 
 **Réseau rendu : `my_torch_network.nn`, avec 91.76 % de précision et 90.25 % de F1 macro sur 72 301 positions de test jamais vues.**
 
+Projet Epitech (G-CNA-501) réalisé en binôme, avec Milo Bousquet comme lead.
+Pour une démonstration guidée sans entraînement : `./demo.sh` (écrit uniquement dans `demo_live/`).
+
 ## Installation
 
 Il faut Python 3 et NumPy. Matplotlib n'est nécessaire que pour tracer les benchmarks.
